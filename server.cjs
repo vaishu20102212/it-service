@@ -16,7 +16,7 @@ app.use(
     origin: [
       "http://localhost:5173",
        "http://localhost:5174",
-      "https://it-services-desk.vercel.app",
+      "https://it-service-pink.vercel.app/login",
     ],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
