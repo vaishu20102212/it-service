@@ -6,8 +6,17 @@ export const getTickets = async (): Promise<Ticket[]> => {
   try {
     const response = await api.get<Ticket[]>("/tickets");
     if (response.data && response.data.length > 0) {
-      setStoredTickets(response.data);
-      return response.data;
+      // Merge instead of overwrite: keep any locally-created tickets
+      // that haven't made it to the server yet (e.g. backend was
+      // asleep/unreachable when they were created), so they don't
+      // silently disappear once the server responds.
+      const localTickets = getStoredTickets();
+      const serverIds = new Set(response.data.map((t) => t.id));
+      const localOnly = localTickets.filter((t) => !serverIds.has(t.id));
+      const merged = [...localOnly, ...response.data];
+
+      setStoredTickets(merged);
+      return merged;
     }
   } catch {
     // fallback to local storage
