@@ -31,19 +31,45 @@ const Dashboard = () => {
 
   // 2. SUPPORT AGENT DASHBOARD METRICS (Section 2, Page 3 & 4)
   // My Assigned Tickets, New Tickets, In Progress, Pending, Resolved, High Priority
-  const agentTickets = tickets.filter(
+ const agentTickets = tickets.filter(
+  (t) =>
+    t.assignedAgent === currentUser?.id ||
+    t.assignedAgent === null
+);
+
+const agentStats = {
+  myAssigned: tickets.filter(
     (t) => t.assignedAgent === currentUser?.id
-  );
-  const agentStats = {
-    myAssigned: agentTickets.length,
-    newTickets: tickets.filter((t) => t.status === "open").length,
-    inProgress: agentTickets.filter((t) => t.status === "in_progress").length,
-    pending: agentTickets.filter((t) => t.status === "pending").length,
-    resolved: agentTickets.filter((t) => t.status === "resolved").length,
-    highPriority: agentTickets.filter(
-      (t) => t.priority === "high" || t.priority === "critical"
-    ).length,
-  };
+  ).length,
+
+  newTickets: tickets.filter(
+    (t) => t.status === "open" && !t.assignedAgent
+  ).length,
+
+  inProgress: agentTickets.filter(
+    (t) =>
+      t.assignedAgent === currentUser?.id &&
+      t.status === "in_progress"
+  ).length,
+
+  pending: agentTickets.filter(
+    (t) =>
+      t.assignedAgent === currentUser?.id &&
+      t.status === "pending"
+  ).length,
+
+  resolved: agentTickets.filter(
+    (t) =>
+      t.assignedAgent === currentUser?.id &&
+      t.status === "resolved"
+  ).length,
+
+  highPriority: agentTickets.filter(
+    (t) =>
+      (t.assignedAgent === currentUser?.id || !t.assignedAgent) &&
+      (t.priority === "high" || t.priority === "critical")
+  ).length,
+};
 
   // 3. EMPLOYEE DASHBOARD METRICS (Section 2, Page 4)
   // My Total Tickets, Open Tickets, In Progress Tickets, Resolved Tickets, Closed Tickets

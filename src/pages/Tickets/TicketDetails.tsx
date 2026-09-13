@@ -58,11 +58,15 @@ const { currentUser, isAdmin, isAgent, isEmployee, canEditTicket, canDeleteTicke
         setLoading(false);
         return;
       }
-      if (isAgent && ticketData.assignedAgent !== currentUser?.id) {
-        setError("You are only authorized to view tickets assigned to you.");
-        setLoading(false);
-        return;
-      }
+      if (
+  isAgent &&
+  ticketData.assignedAgent !== currentUser?.id &&
+  ticketData.assignedAgent !== null
+) {
+  setError("You are not authorized to view this ticket.");
+  setLoading(false);
+  return;
+}
 
       setTicket(ticketData);
 

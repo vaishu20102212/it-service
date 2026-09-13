@@ -54,7 +54,13 @@ const Tickets = () => {
   // Enforce Role-Based Visibility (Section 1, 2, 25)
   const accessibleTickets = useMemo(() => {
     if (isAdmin) return tickets;
-    if (isAgent) return tickets.filter((t) => t.assignedAgent === currentUser?.id);
+    if (isAgent) {
+  return tickets.filter(
+    (t) =>
+      t.assignedAgent === currentUser?.id ||
+      t.assignedAgent === null
+  );
+}
     if (isEmployee) return tickets.filter((t) => t.createdBy === currentUser?.id);
     return [];
   }, [tickets, isAdmin, isAgent, isEmployee, currentUser]);
